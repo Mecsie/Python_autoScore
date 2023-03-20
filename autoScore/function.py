@@ -7,6 +7,7 @@ import openpyxl
 import ast
 import astunparse
 import sys
+import os
 def getSubprocessesInputPrompt(pythonFilePath):
     with open(pythonFilePath, 'r' ,encoding="utf-8") as f:
         subprocess_code = f.read()
@@ -109,7 +110,9 @@ def writeLogForExcelFile(logFilePath,pythonFilePathAndScore):
 def executeHwFile(pythonFilePath,stdInput):
     command = [sys.executable,pythonFilePath]
     try:
-        p = subprocess.Popen(command, env = {'PYTHONIOENCODING': 'utf-8','PYTHONHASHSEED': '0'},stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        env = os.environ.copy()
+        env['PYTHONIOENCODING']= 'utf-8'
+        p = subprocess.Popen(command, env = env,stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         # print(stdInput)
         output,err = p.communicate(input=stdInput.encode(),timeout=2)
         # output = p.communicate(input='5\n3\n'.encode())[0]
